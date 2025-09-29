@@ -44,8 +44,10 @@ cd frontend
 npm install
 In config.ts change the BACKEND_URL
 
-🚀 Running the Project
+### 🚀 Running the Project
+### For Backend
 cd backend
 npm run dev
+### For Frontend
 cd frontend 
 npm run dev
