@@ -40,6 +40,7 @@ app.use(
   cors({
     origin: [
       "https://note-making-app-kappa.vercel.app",
+      "https://note-making-6hsmii35n-pulkits-projects-51a61865.vercel.app",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
