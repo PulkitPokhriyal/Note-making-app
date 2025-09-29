@@ -1,5 +1,4 @@
 import express from "express";
-import bodyparser from "body-parser";
 import env from "dotenv";
 import jwt from "jsonwebtoken";
 import z from "zod";
@@ -11,10 +10,32 @@ import { PrismaClient } from "@prisma/client";
 import { Middleware } from "./middleware.js";
 
 const app = express();
-app.use(express.json());
-const port = 3000;
+env.config();
+const port = process.env.PORT || 3000;
 const prisma = new PrismaClient();
-app.use(bodyparser.json());
+const saltRounds = 10;
+const redis = new Redis(process.env.REDIS_URL!);
+
+const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
+const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY;
+
+if (!MAILGUN_DOMAIN || !MAILGUN_API_KEY) {
+  console.error(
+    "CRITICAL ERROR: Mailgun credentials (MAILGUN_DOMAIN or MAILGUN_API_KEY) are missing!",
+  );
+}
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.mailgun.org",
+  port: 587,
+  secure: false,
+  auth: {
+    user: `postmaster@${MAILGUN_DOMAIN}`,
+    pass: MAILGUN_API_KEY,
+  },
+});
+
+app.use(express.json());
 app.use(
   cors({
     origin: [
@@ -26,16 +47,7 @@ app.use(
     credentials: true,
   }),
 );
-env.config();
-const saltRounds = 10;
-const redis = new Redis(process.env.REDIS_URL!);
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.PASS_USER,
-  },
-});
+
 const userSchema = z.object({
   name: z
     .string()
@@ -82,7 +94,7 @@ app.post("/api/v1/signup", async (req, res) => {
       await redis.set(`otp:${email}`, otp, "EX", 300);
 
       await transporter.sendMail({
-        from: process.env.USER_EMAIL,
+        from: `Note App Support <postmaster@${MAILGUN_DOMAIN}>`,
         to: email,
         subject: "Your OTP Code for signing up on note-making-app",
         text: `Your OTP is: ${otp}. It will expire in 5 minutes.`,
@@ -91,6 +103,9 @@ app.post("/api/v1/signup", async (req, res) => {
     }
   } catch (e) {
     console.log("Error during signup:", e);
+    return res
+      .status(500)
+      .json({ message: "Failed to send OTP. Server error." });
   }
 });
 
@@ -231,6 +246,7 @@ app.delete("/api/v1/deletenote/:id", Middleware, async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 });
+
 app.get("/api/v1/notes/:id", Middleware, async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -250,6 +266,7 @@ app.get("/api/v1/notes/:id", Middleware, async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
+
 app.put("/api/v1/updatenote/:id", Middleware, async (req, res) => {
   try {
     const id = Number(req.params.id);
