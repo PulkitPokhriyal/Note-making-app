@@ -30,9 +30,7 @@ env.config();
 const saltRounds = 10;
 const redis = new Redis(process.env.REDIS_URL!);
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.PASS_USER,

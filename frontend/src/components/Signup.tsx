@@ -59,7 +59,7 @@ export const Signup = () => {
               otp: values.otp,
             },
           );
-          if (response.status === 201) {
+          if (response.status === 200) {
             const token = response.data.token;
             localStorage.setItem(token, token);
             navigate("/dashboard");
