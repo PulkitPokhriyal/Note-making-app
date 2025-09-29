@@ -15,7 +15,17 @@ app.use(express.json());
 const port = 3000;
 const prisma = new PrismaClient();
 app.use(bodyparser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://note-making-app-kappa.vercel.app/",
+      "http://localhost:5173",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "token"],
+    credentials: true,
+  }),
+);
 env.config();
 const saltRounds = 10;
 const redis = new Redis(process.env.REDIS_URL!);
