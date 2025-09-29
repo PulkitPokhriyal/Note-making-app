@@ -43,19 +43,19 @@ JWT_PASSWORD="your-secret"
 
 ### 3. Frontend setup
 ```bash
-cd frontend.
-npm install.
+cd frontend
+npm install
 ```
 In config.ts change the BACKEND_URL.
 
 ### 🚀 Running the Project
 ### For Backend
 ```bash
-cd backend.
-npm run dev.
+cd backend
+npm run dev
 ```
 ### For Frontend
 ```bash
-cd frontend. 
-npm run dev.
+cd frontend
+npm run dev
 ```
