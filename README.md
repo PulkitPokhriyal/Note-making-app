@@ -1,6 +1,9 @@
 A full-stack note-taking application with **user authentication, OTP signup verification, and CRUD operations for notes**. Built with **React**, **Node.js**, **Express**, **Prisma**, **PostgreSQL**, and **Redis**.
 
 ---
+## For Testing you can use : 
+email: test@example.com
+password: password123
 
 ## 🔹 Features
 
