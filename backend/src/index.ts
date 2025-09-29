@@ -18,7 +18,7 @@ app.use(bodyparser.json());
 app.use(
   cors({
     origin: [
-      "https://note-making-app-kappa.vercel.app/",
+      "https://note-making-app-kappa.vercel.app",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
