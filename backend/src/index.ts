@@ -27,7 +27,7 @@ if (!MAILGUN_DOMAIN || !MAILGUN_API_KEY) {
 
 const transporter = nodemailer.createTransport({
   host: "smtp.mailgun.org",
-  port: 587,
+  port: 2525,
   secure: false,
   auth: {
     user: `postmaster@${MAILGUN_DOMAIN}`,
